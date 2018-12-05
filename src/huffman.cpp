@@ -1,5 +1,9 @@
 #include "huffman.h"
 
+HuffmanTree::HuffmanTree() { root = nullptr; }
+
+HuffmanTree::~HuffmanTree() { delete root; }
+
 HuffmanTree::HuffmanTree (std::vector<Node*> & nodes) {
 
     while(nodes.size() >= 2){
@@ -10,9 +14,51 @@ HuffmanTree::HuffmanTree (std::vector<Node*> & nodes) {
         Node *node = new Node(n1->getFreq() + n2->getFreq(), n1, n2);
         insertOrd(nodes, node,pred );
     }
-
     root = nodes.front();
-    printTree();
+}
+
+std::string HuffmanTree::findLetterPath(unsigned char letter){
+     auto it = pathsDict.find(letter);
+
+     if (it != pathsDict.end()){
+        return it->second;
+     }
+     else {
+        return "";
+     }
+}
+
+std::map<char,std::string> HuffmanTree::getMap() {
+    return pathsDict;
+}
+
+void HuffmanTree::fillMap() {
+    fillMap(root);
+    
+    for (auto it = pathsDict.begin(); it != pathsDict.end(); ++it) {
+        std::cout << it->first << " " << it->second << std::endl; 
+    }
+    
+}
+
+void HuffmanTree::fillMap(Node *node, std::string string) {
+    if(node->getLChild() == nullptr and node->getRChild() == nullptr){
+        pathsDict[node->getLetter()] = string;         
+    }
+    
+    else {
+        if(node->getLChild() != nullptr){
+            string += '0';
+            fillMap(node->getLChild(), string);
+        }
+        
+        string.erase(string.end()-1);
+        
+        if(node->getRChild() != nullptr){
+            string += '1';
+            fillMap(node->getRChild(),string);
+        }
+    }
 }
 
 void HuffmanTree::printTree(){
@@ -33,5 +79,5 @@ void HuffmanTree::printTree(){
             queue.push(node->getRChild());
     }
 
-    std::cout << nodesByDepth;
+    std::cout << nodesByDepth << std::endl;
 }

@@ -1,7 +1,7 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include "ascii.h"
+#include "util.h"
 
 class Node {
 
