@@ -1,11 +1,11 @@
-#ifndef _ASCII_H
-#define _ASCII_H
+#ifndef ASCII_H
+#define ASCII_H
 
 #include <vector>
 #include <fstream>
 #include <utility>
 #include <algorithm>
 
-int * countFrequencies(std::ifstream& input);
+int *countFrequencies(std::ifstream& input);
 
-#endif
+#endif /* ASCII_H */
