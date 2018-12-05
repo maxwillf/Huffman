@@ -5,6 +5,8 @@
 #include "node.h"
 #include "ascii.h"
 
+Node constructTree(std::vector<Node> & nodes);
+
 int main(int argc, char *argv[])
 {
     std::ifstream input("bombom.txt");
@@ -13,6 +15,7 @@ int main(int argc, char *argv[])
 //    int * ascii = pair.get(0);
   //  int size = pair.get(1);
     int * ascii = countFrequencies(input);
+    input.close(); 
    
     std::vector<Node> orderedNodes;
 
@@ -21,16 +24,28 @@ int main(int argc, char *argv[])
             char character = i;
             Node node(ascii[i], character);
             insertOrd(orderedNodes, node, pred);
-    //       newSize++;
-    //        std::cout << c << " " <<  ascii[i] << std::endl; 
         }
     }
+
     for (auto i : orderedNodes) {
         std::cout << i.getFreq() << " " << i.getLetter() << std::endl; 
     }
-    
 
+    constructTree(orderedNodes);
 
-    input.close(); 
     return 0;
+}
+
+Node constructTree(std::vector<Node> & nodes) {
+
+    while(nodes.size() >= 2){
+        Node *n1 = new Node(nodes.back());
+        nodes.pop_back();
+        Node *n2 = new Node(nodes.back());
+        nodes.pop_back();
+        Node node(n1->getFreq() + n2->getFreq(), n1, n2);
+        insertOrd(nodes, node,pred );
+    }
+
+    nodes.front().printNode();
 }
