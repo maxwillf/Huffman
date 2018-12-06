@@ -4,7 +4,7 @@ class IOManager {
 
     //FILE *fp;
     int currentNodeIndex;
-    char nodeChar;
+    unsigned char nodeChar;
     int byteIndex;
     char byte;
     HuffmanTree *tree;

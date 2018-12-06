@@ -156,7 +156,7 @@ void IOManager::decodeTree(std::ifstream &input){
 
 Node* IOManager::decodeTreeR(std::ifstream &input){
     
-    if(byteIndex % 7 == 0){
+    if(byteIndex % 8 == 0){
         input.get(byte);
         //std::cout << "urgh" <<  byte << std::endl;
         if(byte == '\0'){
@@ -171,16 +171,16 @@ Node* IOManager::decodeTreeR(std::ifstream &input){
     if( (byte & mask) == 0){
         byte = byte << 1;
         byteIndex++;
-        std::cout << "ue" << std::endl;
+//        std::cout << "ue" << std::endl;
         return new Node(0,decodeTreeR(input),decodeTreeR(input));
     }
 
     else {
         nodeChar = 0;
 
-        while(currentNodeIndex != 8){
+        while(currentNodeIndex < 8){
 
-            if( (byte & mask) == 1){
+            if( (byte & mask) == mask){
                 nodeChar += 1;
                 nodeChar = nodeChar << 1;
                 byte = byte << 1;
@@ -195,7 +195,7 @@ Node* IOManager::decodeTreeR(std::ifstream &input){
                 currentNodeIndex++;
             }
 
-            if(byteIndex % 7 == 0){
+            if(byteIndex % 8 == 0){
                 input.get(byte);
                 if(byte == '\0'){
                     return nullptr;
@@ -203,6 +203,7 @@ Node* IOManager::decodeTreeR(std::ifstream &input){
                 byteIndex = 0;
             }
         }
+
         currentNodeIndex = 0;
         return new Node(0,nodeChar);
     }
