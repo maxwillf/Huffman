@@ -4,7 +4,6 @@ class IOManager {
 
     //FILE *fp;
     int bitIndex;
-    unsigned char bit;
     HuffmanTree *tree;
 
     /*encode(unsigned char letter){
@@ -19,7 +18,7 @@ class IOManager {
     IOManager() : bitIndex(0) {}
 
     void readFile(std::ifstream &input);
-    void decodeTree(std::ifstream &input);
     void compact(std::ifstream &input, std::ofstream &output);
     void encodeTree(std::ofstream &output);
+    void decodeTree(std::ifstream &input);
 };

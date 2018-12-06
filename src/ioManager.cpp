@@ -149,15 +149,19 @@ void IOManager::compact(std::ifstream &input, std::ofstream &output)
     }
 }
 
-void decodeTree(std::ifstream &input){
+void IOManager::decodeTree(std::ifstream &input)
+{
+    // reset file stream
+    input.clear();
+    input.seekg(0, std::ios::beg);
 
-    char c = '\0';
+    char c;
+    input.get(c);
+    std::cout << "I'm here" << "\n";
+    std::cout << (int) c << "\n";
     while (input.get(c)){
-/*        if(c == '\0'){
-
-        }*/
+        std::cout << (int) c << "\n";
     }
-
 }
 
 

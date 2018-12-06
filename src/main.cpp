@@ -13,11 +13,19 @@ int main(int argc, char *argv[])
     std::ofstream output("res/bombom_compact.txt");
 
     std::ofstream outputTree("res/tree_compact.txt");
+    std::ifstream decompress("res/bombom_compact.txt");
     IOManager io;
 
+    // compression
     io.readFile(input);
     io.encodeTree(outputTree);
     io.compact(input, output);
+    input.close();
+    output.close();
+    outputTree.close();
+
+    // decompression
+    io.decodeTree(decompress);
 
     input.close();
     return 0;
