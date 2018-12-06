@@ -10,6 +10,7 @@
 #include <queue>
 #include <string>
 #include <iostream>
+#include <sstream>
 
 //int *countFrequencies(std::ifstream& input);
 

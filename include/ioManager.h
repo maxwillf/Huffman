@@ -13,11 +13,11 @@ class IOManager {
 
  private:
     int *countFrequencies(std::ifstream &input);
-    void encodeTree(std::ofstream &output);
 
  public:
     IOManager() : bitIndex(0) {}
 
     void readFile(std::ifstream &input);
     void compact(std::ifstream &input, std::ofstream &output);
+    void encodeTree(std::ofstream &output);
 };

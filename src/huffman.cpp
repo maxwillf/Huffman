@@ -95,14 +95,15 @@ std::string HuffmanTree::preOrder()
         }
         else {
             finalString += "0";
-            finalString += curr->getLetter();
+            //finalString += curr->getLetter();
         }
+        
+        if (curr->getRChild())
+            stack.push(curr->getRChild());
 
         if (curr->getLChild())
             stack.push(curr->getLChild());
 
-        if (curr->getRChild())
-            stack.push(curr->getRChild());
     }
 
     return finalString;

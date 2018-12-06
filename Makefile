@@ -14,7 +14,8 @@ DATADIR = ./data
 DOCDIR = ./doc
 
 # Macros
-CC = eg++
+#CC = eg++
+CC = clang++
 CFLAGS = -Wall -g -ggdb -std=c++14 -I. -I$(INCDIR)
 RM = -rm
 PROJ_NAME = huffman 

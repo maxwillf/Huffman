@@ -11,7 +11,13 @@ int *IOManager::countFrequencies(std::ifstream &input)
 
         ascii[(int) c] +=1;
     }
-
+    
+    for (int i = 0; i < 128; ++i) {
+       if(ascii[i] != 0){
+        c = i;
+        std::cout << c << " " << ascii[i] << std::endl;
+       }
+    }
     return ascii;
 }
 
@@ -43,7 +49,52 @@ void IOManager::readFile(std::ifstream &input)
    delimiter between where the tree starts and where the text starts */
 void IOManager::encodeTree(std::ofstream &output)
 {
+    std::string treeString = tree->preOrder();
+    std::string encodedString = "";
+    std::istringstream input(treeString);
+    
+    
+    std::cout << tree->preOrder() << std::endl;
 
+    char c = '\0';
+
+    while(input.get(c)){
+        if(c != '0' and c != '1')
+            encodedString += tree->findLetterPath(c);
+        else 
+            encodedString += c;
+    }
+
+    std::cout << encodedString << std::endl;
+    
+    for (size_t i = 0; i < encodedString.size(); ++i) {
+        if (encodedString[i] == '1') {
+            c = c << 1;
+            c += 1;
+        }
+        else {
+            c = c << 1;
+        }
+
+        /*if(i == encodedString.size()) {
+       
+            if( i % 8 == 0){
+                while(++i % 8 != 0){
+                    c << 1;
+                std::cout << " PORRA" << std::endl;
+                }
+
+            }
+            output << c;
+        }*/
+
+        /*else*/
+        if ((i != 0 and (i + 1) % 8 == 0) or (i + 1) == encodedString.size()) {
+            output << c;
+            c = '\0';
+        }
+        
+    }
 }
 
 void IOManager::compact(std::ifstream &input, std::ofstream &output)
