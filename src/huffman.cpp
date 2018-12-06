@@ -95,7 +95,6 @@ std::string HuffmanTree::preOrder()
         }
         else {
             finalString += "0";
-            //finalString += curr->getLetter();
         }
         
         if (curr->getRChild())
