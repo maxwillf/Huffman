@@ -15,6 +15,10 @@ class HuffmanTree
 
     HuffmanTree (std::vector<Node*> & nodes);
     HuffmanTree();
+    HuffmanTree(Node * root){
+     this->root = root;   
+    };
+
     // func below may not be useful
     std::map<char, std::string> getMap();
 

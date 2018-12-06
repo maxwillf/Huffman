@@ -3,8 +3,10 @@
 class IOManager {
 
     //FILE *fp;
-    int bitIndex;
-    unsigned char bit;
+    int currentNodeIndex;
+    char nodeChar;
+    int byteIndex;
+    char byte;
     HuffmanTree *tree;
 
     /*encode(unsigned char letter){
@@ -14,9 +16,10 @@ class IOManager {
  private:
     int *countFrequencies(std::ifstream &input);
     std::string charBitsToString(unsigned char c);
+    Node *decodeTreeR(std::ifstream &input);
 
  public:
-    IOManager() : bitIndex(0) {}
+    IOManager() : byteIndex(0) {}
 
     void readFile(std::ifstream &input);
     void decodeTree(std::ifstream &input);

@@ -80,6 +80,12 @@ void HuffmanTree::printTree()
 
 std::string HuffmanTree::preOrder()
 {
+
+    if(root == nullptr){
+        std::cout << "null root" << std::endl;
+        return "";
+    }
+
     std::string finalString = "";
 
     std::stack<Node *> stack;

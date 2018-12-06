@@ -30,8 +30,7 @@ void IOManager::readFile(std::ifstream &input)
         if (ascii[i] != 0) {
             char character = i;
             Node *node = new Node(ascii[i], character);
-            insertOrd(orderedNodes, node, pred);
-        }
+            insertOrd(orderedNodes, node, pred); }
     }
 
     insertOrd(orderedNodes, new Node(1, '$'), pred);
@@ -48,18 +47,18 @@ std::string IOManager::charBitsToString(unsigned char c) {
     unsigned char mask = 1;
     std::string bits = "";
 
-    while(bitIndex != 8){
+    while(byteIndex != 8){
         if( (c & mask) == mask){
             bits += '1';
         }
         else {
             bits += '0';
         }
-        bitIndex++;
+        byteIndex++;
         c = c >> 1;
     }
 
-    bitIndex = 0;
+    byteIndex = 0;
 
     std::reverse(bits.begin(),bits.end());
     return bits;
@@ -112,7 +111,6 @@ void IOManager::encodeTree(std::ofstream &output)
             c = '\0';
         }
     }
-
     output << '\0';
 }
 
@@ -149,15 +147,63 @@ void IOManager::compact(std::ifstream &input, std::ofstream &output)
     }
 }
 
-void decodeTree(std::ifstream &input){
-   
-    char c = '\0';
-    while (input.get(c)){
-/*        if(c == '\0'){
-           
-        }*/
-    }
+void IOManager::decodeTree(std::ifstream &input){
 
+    delete tree;
+    tree = new HuffmanTree(decodeTreeR(input));
+    std::cout << tree->preOrder();
 }
 
+Node* IOManager::decodeTreeR(std::ifstream &input){
+    
+    if(byteIndex % 7 == 0){
+        input.get(byte);
+        //std::cout << "urgh" <<  byte << std::endl;
+        if(byte == '\0'){
+            //std::cout << "null " <<  byte << std::endl;
+            return nullptr;
+        }
+        byteIndex = 0;
+    }
+    
+    unsigned char mask = 0b10000000;
+   
+    if( (byte & mask) == 0){
+        byte = byte << 1;
+        byteIndex++;
+        std::cout << "ue" << std::endl;
+        return new Node(0,decodeTreeR(input),decodeTreeR(input));
+    }
 
+    else {
+        nodeChar = 0;
+
+        while(currentNodeIndex != 8){
+
+            if( (byte & mask) == 1){
+                nodeChar += 1;
+                nodeChar = nodeChar << 1;
+                byte = byte << 1;
+                byteIndex++;
+                currentNodeIndex++;
+            }
+
+            else {
+                nodeChar = nodeChar << 1;
+                byte = byte << 1;
+                byteIndex++;
+                currentNodeIndex++;
+            }
+
+            if(byteIndex % 7 == 0){
+                input.get(byte);
+                if(byte == '\0'){
+                    return nullptr;
+                }
+                byteIndex = 0;
+            }
+        }
+        currentNodeIndex = 0;
+        return new Node(0,nodeChar);
+    }
+}
