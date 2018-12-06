@@ -4,7 +4,7 @@ HuffmanTree::HuffmanTree() { root = nullptr; }
 
 HuffmanTree::~HuffmanTree() { delete root; }
 
-HuffmanTree::HuffmanTree (std::vector<Node*> & nodes)
+HuffmanTree::HuffmanTree(std::vector<Node*> & nodes)
 {
     while (nodes.size() >= 2) {
         Node *n1 = nodes.back();
@@ -48,11 +48,11 @@ void HuffmanTree::fillMap(Node *node, std::string string)
             fillMap(node->getLChild(), string);
         }
 
-        string.erase(string.end()-1);
+        string.erase(string.end() - 1);
 
         if (node->getRChild() != nullptr) {
             string += '1';
-            fillMap(node->getRChild(),string);
+            fillMap(node->getRChild(), string);
         }
     }
 }
@@ -76,4 +76,34 @@ void HuffmanTree::printTree()
     }
 
     std::cout << nodesByDepth << std::endl;
+}
+
+std::string HuffmanTree::preOrder()
+{
+    std::string finalString = "";
+
+    std::stack<Node *> stack;
+    stack.push(root);
+
+    while (!stack.empty()) {
+        Node *curr = stack.top();
+        stack.pop();
+
+        if (curr->getLChild() == nullptr and curr->getRChild() == nullptr) {
+            finalString += "1";
+            finalString += curr->getLetter();
+        }
+        else {
+            finalString += "0";
+            finalString += curr->getLetter();
+        }
+
+        if (curr->getLChild())
+            stack.push(curr->getLChild());
+
+        if (curr->getRChild())
+            stack.push(curr->getRChild());
+    }
+
+    return finalString;
 }

@@ -2,6 +2,7 @@
 #define _HUFFMAN_H
 
 #include "node.h"
+#include <stack>
 
 class HuffmanTree
 {
@@ -13,6 +14,7 @@ class HuffmanTree
     std::map<char,std::string> pathsDict;
 
     HuffmanTree (std::vector<Node*> & nodes);
+    HuffmanTree();
     // func below may not be useful
     std::map<char, std::string> getMap();
 
@@ -20,7 +22,7 @@ class HuffmanTree
 
     void printTree();
     void fillMap();
-    HuffmanTree();
+    std::string preOrder();
     ~HuffmanTree();
 };
 

@@ -5,14 +5,19 @@ int *IOManager::countFrequencies(std::ifstream &input)
     int *ascii = new int[128];
     char c = '\0';
 
-    while (input >> c) ascii[(int) c] +=1;
+    while (input.get(c)) {
+        if ((int) c == 10)
+            continue;
+
+        ascii[(int) c] +=1;
+    }
 
     return ascii;
 }
 
 void IOManager::readFile(std::ifstream &input)
 {
-    int* ascii = countFrequencies(input);
+    int *ascii = countFrequencies(input);
     std::vector<Node*> orderedNodes;
 
     for (int i = 0; i < 128; ++i) {
@@ -23,7 +28,7 @@ void IOManager::readFile(std::ifstream &input)
         }
     }
 
-    insertOrd(orderedNodes, new Node(1, '\0'), pred);
+    insertOrd(orderedNodes, new Node(1, '$'), pred);
 
     tree = new HuffmanTree(orderedNodes);
     tree->printTree();
@@ -39,6 +44,8 @@ void IOManager::encodeTree(std::ofstream &output)
 
 void IOManager::compact(std::ifstream &input, std::ofstream &output)
 {
+    std::cout << tree->preOrder() << std::endl;
+
     // reset file stream
     input.clear();
     input.seekg(0, std::ios::beg);
@@ -46,10 +53,10 @@ void IOManager::compact(std::ifstream &input, std::ofstream &output)
     char c = '\0';
     std::string encodedString = "";
 
-    while (input >> c)
+    while (input.get(c))
         encodedString += tree->findLetterPath(c);
 
-    std::cout << encodedString << "\n";
+    std::cout << encodedString << std::endl;
 
     c = '\0';
     for (size_t i = 0; i < encodedString.size(); ++i) {
