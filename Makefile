@@ -11,13 +11,13 @@ SRCDIR = ./src
 OBJDIR = ./obj
 BINDIR = ./bin
 DATADIR = ./data
-DOCDIR = ./Documentation
+DOCDIR = ./doc
 
 # Macros
-CC = g++
-CFLAGS = -Wall -g -ggdb -std=c++11 -I. -I$(INCDIR)
+CC = eg++
+CFLAGS = -Wall -g -ggdb -std=c++14 -I. -I$(INCDIR)
 RM = -rm
-PROJ_NAME = Huffman 
+PROJ_NAME = huffman 
 DOC_NAME = index.html
 
 HEADERS := $(wildcard $(INCDIR)/*)
@@ -26,14 +26,17 @@ OBJECTS := $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 
 all: project #documentation
 
+run: all
+	./$(PROJ_NAME)
+
 project: $(OBJECTS) $(HEADERS) | $(BINDIR)
 	$(CC) $(OBJECTS) $(CFLAGS) -o $(BINDIR)/$(PROJ_NAME)
-	@ln -sfv $(BINDIR)/$(PROJ_NAME) $(PROJ_NAME)
+	@ln -sf $(BINDIR)/$(PROJ_NAME) $(PROJ_NAME)
 
 documentation:
 	@mkdir -p $(DOCDIR)
 	@doxygen config
-	@ln -sfv $(DOCDIR)/html/index.html $(DOC_NAME)
+	@ln -sf $(DOCDIR)/html/index.html $(DOC_NAME)
 
 $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp $(HEADERS) | $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
