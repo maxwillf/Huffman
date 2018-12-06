@@ -147,11 +147,103 @@ void IOManager::compact(std::ifstream &input, std::ofstream &output)
     }
 }
 
+void IOManager::binaryToString(std::ifstream &input)
+{
+    unsigned char mask = 0b10000000;
+
+    while(input.get(byte)){
+
+        for (int i = 0; i < 8; ++i) {
+
+            if( (byte & mask) == 0){
+                byte = byte << 1;
+                byteIndex++;
+                decodingString += '0';
+            }
+
+            else {
+                byte = byte << 1;
+                byteIndex++;
+                decodingString += '1';
+            }
+        }
+    }
+
+    std::cout << decodingString << std::endl;
+    std::vector<std::string> StringNodes;
+    stringToTree(decodingString.begin(),StringNodes);
+    
+    for (auto i : StringNodes) {
+        std::cout << i << std::endl; 
+    }
+    std::cout << StringNodes.size() << std::endl; 
+    
+    byteIndex = 0;
+    delete tree;
+    tree = new HuffmanTree(constructTree(StringNodes));
+
+    std::cout << tree->preOrder() << std::endl;
+}
+
+Node * IOManager::constructTree(std::vector<std::string> & vec)
+{
+    if(byteIndex < vec.size()){
+        if(vec[byteIndex] == "0"){
+            byteIndex++;
+            Node * left = constructTree(vec);
+            byteIndex++;
+            Node * right = constructTree(vec);
+            return new Node(0,left,right);
+        }
+
+        else return new Node(0,stringToChar(vec[byteIndex]));
+    }
+
+    return nullptr;
+}
+
+char IOManager::stringToChar(std::string str)
+{
+    unsigned char byte = 0;
+    
+    for (auto i = str.begin(); i < str.end(); ++i) {
+        if(*i == '0'){
+           byte = byte << 1; 
+        }
+        else {
+            byte = byte << 1; 
+            byte += 1;
+        }
+    }
+
+    //std::cout << byte << std::endl;
+    return byte;
+}
+
+void IOManager::stringToVec(std::string::iterator curr_symbol, std::vector<std::string> & vec)
+{
+    if(curr_symbol != decodingString.end()){
+        if(*curr_symbol == '0'){
+            vec.push_back("0");
+            stringToTree(++curr_symbol,vec);
+        }
+
+        else {
+            curr_symbol++;
+            int beginIndex = std::distance(decodingString.begin(),curr_symbol);
+            std::string letter = decodingString.substr(beginIndex,8);
+            vec.push_back(letter);
+            stringToTree(curr_symbol+8,vec);
+        }
+    }
+}
+
 void IOManager::decodeTree(std::ifstream &input){
 
-    delete tree;
+    binaryToString(input);
+/*    delete tree;
     tree = new HuffmanTree(decodeTreeR(input));
-    std::cout << tree->preOrder();
+    std::cout << tree->preOrder();*/
 }
 
 Node* IOManager::decodeTreeR(std::ifstream &input){
@@ -163,6 +255,7 @@ Node* IOManager::decodeTreeR(std::ifstream &input){
             //std::cout << "null " <<  byte << std::endl;
             return nullptr;
         }
+
         byteIndex = 0;
     }
     
