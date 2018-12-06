@@ -11,13 +11,13 @@ int main(int argc, char *argv[])
 {
     std::ifstream input("res/bombom.txt");
     std::ofstream output("res/bombom_compact.txt");
-    
+
     std::ofstream outputTree("res/tree_compact.txt");
     IOManager io;
 
     io.readFile(input);
     io.encodeTree(outputTree);
-//    io.compact(input, output);
+    io.compact(input, output);
 
     input.close();
     return 0;

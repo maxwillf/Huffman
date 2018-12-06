@@ -11,13 +11,14 @@ int *IOManager::countFrequencies(std::ifstream &input)
 
         ascii[(int) c] +=1;
     }
-    
+
     for (int i = 0; i < 128; ++i) {
-       if(ascii[i] != 0){
-        c = i;
-        std::cout << c << " " << ascii[i] << std::endl;
+       if (ascii[i] != 0) {
+           c = i;
+           std::cout << c << " " << ascii[i] << std::endl;
        }
     }
+
     return ascii;
 }
 
@@ -43,18 +44,19 @@ void IOManager::readFile(std::ifstream &input)
     delete ascii;
 }
 
-std::string IOManager::charBitsToString(unsigned char c) {
-
+std::string IOManager::charBitsToString(unsigned char c)
+{
     unsigned char mask = 1;
     std::string bits = "";
 
     while(bitIndex != 8){
-        if( (c & mask) == mask){
+        if ((c & mask) == mask) {
             bits += '1';
         }
         else {
             bits += '0';
         }
+
         bitIndex++;
         c = c >> 1;
     }
@@ -74,21 +76,20 @@ void IOManager::encodeTree(std::ofstream &output)
     std::string treeString = tree->preOrder();
     std::string encodedString = "";
     std::istringstream input(treeString);
-    
-    
+
     std::cout << tree->preOrder() << std::endl;
 
     char c = '\0';
 
-    while(input.get(c)){
-        if(c != '0' and c != '1')
+    while (input.get(c)) {
+        if (c != '0' and c != '1')
             encodedString += charBitsToString(c);
-        else 
+        else
             encodedString += c;
     }
 
     std::cout << encodedString << std::endl;
-    
+
     for (size_t i = 0; i < encodedString.size(); ++i) {
         if (encodedString[i] == '1') {
             c = c << 1;
@@ -98,15 +99,12 @@ void IOManager::encodeTree(std::ofstream &output)
             c = c << 1;
         }
 
-        if(i+1 == encodedString.size()) {
-
-            while(++i % 8 != 0){
+        if(i + 1 == encodedString.size()) {
+            while (++i % 8 != 0)
                 c = c << 1;
-            }
 
             output << c;
         }
-
         else if ((i != 0 and (i + 1) % 8 == 0) or (i + 1) == encodedString.size()) {
             output << c;
             c = '\0';
@@ -118,6 +116,8 @@ void IOManager::encodeTree(std::ofstream &output)
 
 void IOManager::compact(std::ifstream &input, std::ofstream &output)
 {
+    encodeTree(output);
+
     std::cout << tree->preOrder() << std::endl;
 
     // reset file stream
@@ -150,11 +150,11 @@ void IOManager::compact(std::ifstream &input, std::ofstream &output)
 }
 
 void decodeTree(std::ifstream &input){
-   
+
     char c = '\0';
     while (input.get(c)){
 /*        if(c == '\0'){
-           
+
         }*/
     }
 
