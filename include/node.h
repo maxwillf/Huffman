@@ -26,8 +26,16 @@ class Node
 
     int getFreq() const{ return freq; }
     char getLetter() const{ return letter; }
-    Node *getLChild() const{ return left; }
-    Node *getRChild() const{ return right; }
+    bool isLeafNode() 
+    {
+        return left == nullptr and right == nullptr;
+    }
+    Node *getLChild() const{
+        return left ; 
+    }
+    Node *getRChild() const{
+        return right;
+    }
 };
 
 using Compare  = bool (const Node *n1, const Node *n2);

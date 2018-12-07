@@ -20,6 +20,7 @@ class IOManager {
     Node *decodeTreeR(std::ifstream &input);
     void binaryToString(std::ifstream &input);
     void stringToVec(std::string::iterator curr_symbol, std::vector<std::string> & vec);
+    void readCompressed(std::ifstream & input);
     Node * constructTree(std::vector<std::string> & vec);
     char stringToChar(std::string str);
 

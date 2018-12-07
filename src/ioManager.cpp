@@ -111,7 +111,7 @@ void IOManager::encodeTree(std::ofstream &output)
             c = '\0';
         }
     }
-    output << '\0';
+    output << (char) 255;
 }
 
 void IOManager::compact(std::ifstream &input, std::ofstream &output)
@@ -150,8 +150,14 @@ void IOManager::compact(std::ifstream &input, std::ofstream &output)
 void IOManager::binaryToString(std::ifstream &input)
 {
     unsigned char mask = 0b10000000;
-
+    unsigned char delim = (char) 255;
     while(input.get(byte)){
+
+        if((byte & delim) == delim){
+
+            std::cout << "broke free" << std::endl;
+            break; 
+        }
 
         for (int i = 0; i < 8; ++i) {
 
@@ -177,8 +183,9 @@ void IOManager::binaryToString(std::ifstream &input)
     std::cout << StringNodes.size() << std::endl; 
     
     byteIndex = 0;
+
     delete tree;
-    tree = new HuffmanTree(constructTree(StringNodes));
+    this->tree = new HuffmanTree(constructTree(StringNodes));
 
     std::cout << tree->preOrder() << std::endl;
 }
@@ -239,9 +246,37 @@ void IOManager::stringToVec(std::string::iterator curr_symbol, std::vector<std::
 void IOManager::decodeTree(std::ifstream &input){
 
     binaryToString(input);
+    readCompressed(input);
 /*    delete tree;
     tree = new HuffmanTree(decodeTreeR(input));
     std::cout << tree->preOrder();*/
+}
+
+void IOManager::readCompressed(std::ifstream & input)
+{
+    unsigned char mask = (char) 128;
+    std::string file;
+    char temp = '\0';
+    
+    while(input.get(byte)){
+
+        for (int i = 0; i < 8; ++i) {
+            if( (byte & mask) == mask){
+                
+                temp = tree->searchByBit(mask);    
+            }
+            
+            else {
+                temp = tree->searchByBit(0);
+            }
+
+            if (temp != (char) 255) {
+                file += temp;
+            }
+        }
+    }
+
+    std::cout << file << std::endl;
 }
 
 Node* IOManager::decodeTreeR(std::ifstream &input){
