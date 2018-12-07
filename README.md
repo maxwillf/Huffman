@@ -19,7 +19,11 @@ left if it reads a 0 or right if it reads a 1;
 In order to compile simply make sure you have `clang++` and GNU Makefile
 installed and then run `make run` (or `gmake run` in case you're using a BSD),
 this will compile and run the program. If you went to use `g++` simply change
-the `CC` variable in the makefile to `g++`.
+the `CC` variable in the makefile to `g++`. The file to be compacted is stored
+inside the `res/` folder and should be named `input.txt`; the compacted file
+will be on the same folder under the name `output.txt`; the unpacked file, after
+the `input.txt` got compacted to `output.txt` is under the same folder with the
+name `unpacked.txt`.
 
 ## Details of implementation
 
@@ -80,6 +84,21 @@ we have 8 char (or 8 bits), which constitute a byte, which in turn is a char, at
 this point we create a new char using the 8 bits already read from the string,
 and output this new char, no matter if its an ASCII char or not, to the output
 file.
+
+### Decoding the tree
+
+To unpack the compacted information, first we need to decode the header of the
+file and with that recreate the digital tree, this time we won't need the
+frequencies of each character, just its original place on the tree. The decoding
+of the tree is done by the `decodeTree()` method from `IOManager`. The
+`decodeTree()` method only calls the `binaryToString()` method, which in turn
+reads each bit of the compacted file and store them as a 0 or 1 in a string.
+This string is then stored in a vector of strings by the `stringToVec()` method;
+this method goes identifies what is a character and what is not, and stores
+characters in a vector as strings of 8 characters (all of them being 0's or
+1's). This string is them used, still inside the `binaryToString()` method, by
+the `constructTree()` method to generate nodes with the vector of strings,
+returning the root to be used to build a new tree.
 
 ## Authorship
 
