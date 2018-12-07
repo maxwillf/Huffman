@@ -154,7 +154,6 @@ void IOManager::binaryToString(std::ifstream &input)
     while(input.get(byte)){
 
         if((byte & delim) == delim){
-
             std::cout << "broke free" << std::endl;
             break; 
         }
@@ -254,29 +253,34 @@ void IOManager::decodeTree(std::ifstream &input){
 
 void IOManager::readCompressed(std::ifstream & input)
 {
-    unsigned char mask = (char) 128;
+    unsigned char mask = 0x80;
     std::string file;
     char temp = '\0';
     
     while(input.get(byte)){
+       // std::cout << byte << std::endl;
 
         for (int i = 0; i < 8; ++i) {
             if( (byte & mask) == mask){
-                
-                temp = tree->searchByBit(mask);    
+                //std::cout << "1";
+
+                 temp = tree->searchByBit(mask);    
             }
-            
+
             else {
+                //std::cout << "0" ;
                 temp = tree->searchByBit(0);
             }
 
             if (temp != (char) 255) {
                 file += temp;
             }
+            byte = byte << 1;
         }
     }
 
     std::cout << file << std::endl;
+
 }
 
 Node* IOManager::decodeTreeR(std::ifstream &input){

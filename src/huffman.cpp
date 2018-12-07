@@ -134,7 +134,7 @@ char HuffmanTree::searchByBit(unsigned char bit){
            // searchNode->getLChild() == nullptr and searchNode->getRChild() == nullptr)
     {
         char ret = searchNode->getLetter();
-        std::cout << ret << std::endl;
+//        std::cout << ret << std::endl;
         searchNode = root;
         return ret;
     }
