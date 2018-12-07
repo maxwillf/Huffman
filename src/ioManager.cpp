@@ -139,8 +139,15 @@ void IOManager::compact(std::ifstream &input, std::ofstream &output)
         else {
             c = c << 1;
         }
+        if(i+1 == encodedString.size()) {
+            int it = encodedString.size() % 8;
+            while(it++ != 8){  
+                c = c << 1;
+            }
+            output << c;
+        }
 
-        if ((i != 0 and (i + 1) % 8 == 0) or (i + 1) == encodedString.size()) {
+        else if ((i != 0 and (i + 1) % 8 == 0) or (i + 1) == encodedString.size()) {
             output << c;
             c = '\0';
         }
@@ -270,6 +277,10 @@ void IOManager::readCompressed(std::ifstream & input)
             else {
                 //std::cout << "0" ;
                 temp = tree->searchByBit(0);
+            }
+
+            if(temp == '$'){
+                break;
             }
 
             if (temp != (char) 255) {

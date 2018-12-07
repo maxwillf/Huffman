@@ -10,7 +10,7 @@
 int main(int argc, char *argv[])
 {
     std::ifstream input("res/bombom.txt");
-    //  std::ofstream output("res/bombom_compact.txt");
+    std::ofstream output("res/bombom_compact.txt");
     std::ifstream decompress("res/bombom_compact.txt");
 
     std::ofstream outputTree("res/tree_compact.txt");
@@ -18,8 +18,9 @@ int main(int argc, char *argv[])
     IOManager io;
 
     io.readFile(input);
-    //    io.encodeTree(output);
-    //    io.compact(input, output);
+    io.encodeTree(output);
+    io.compact(input, output);
+    output.close();
     input.close();
     io.decodeTree(decompress);
 
