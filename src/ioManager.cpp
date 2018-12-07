@@ -241,16 +241,16 @@ void IOManager::stringToVec(std::string::iterator curr_symbol, std::vector<std::
     }
 }
 
-void IOManager::decodeTree(std::ifstream &input){
+void IOManager::decodeTree(std::ifstream &input, std::ofstream &output){
 
     binaryToString(input);
-    readCompressed(input);
+    readCompressed(input, output);
 /*    delete tree;
     tree = new HuffmanTree(decodeTreeR(input));
     std::cout << tree->preOrder();*/
 }
 
-void IOManager::readCompressed(std::ifstream & input)
+void IOManager::readCompressed(std::ifstream & input, std::ofstream &output)
 {
     unsigned char mask = 0x80;
     std::string file;
@@ -278,8 +278,7 @@ void IOManager::readCompressed(std::ifstream & input)
         }
     }
 
-    std::cout << file << std::endl;
-
+    output << file;
 }
 
 Node* IOManager::decodeTreeR(std::ifstream &input){

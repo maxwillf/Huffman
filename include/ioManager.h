@@ -20,7 +20,7 @@ class IOManager {
     Node *decodeTreeR(std::ifstream &input);
     void binaryToString(std::ifstream &input);
     void stringToVec(std::string::iterator curr_symbol, std::vector<std::string> & vec);
-    void readCompressed(std::ifstream & input);
+    void readCompressed(std::ifstream & input, std::ofstream &output);
     Node * constructTree(std::vector<std::string> & vec);
     char stringToChar(std::string str);
 
@@ -28,7 +28,7 @@ class IOManager {
     IOManager() : byteIndex(0) {}
 
     void readFile(std::ifstream &input);
-    void decodeTree(std::ifstream &input);
+    void decodeTree(std::ifstream &input, std::ofstream &output);
     void compact(std::ifstream &input, std::ofstream &output);
     void encodeTree(std::ofstream &output);
 };

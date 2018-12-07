@@ -100,6 +100,14 @@ characters in a vector as strings of 8 characters (all of them being 0's or
 the `constructTree()` method to generate nodes with the vector of strings,
 returning the root to be used to build a new tree.
 
+### Decoding the message
+
+After the tree has been decoded, we just need to recreate the map mentioned
+earlier, in which the keys of the map are the characters and the content stored
+is the path, in 0's and 1's, from the root to the leaf with that character and
+use that map to run through the rest of the compacted file converting each,
+using the map, each character and outputting it to a file.
+
 ## Authorship
 
 Program developed by [Max William](github.com/maxwillf) and [João Pedro de

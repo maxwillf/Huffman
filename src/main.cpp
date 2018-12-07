@@ -9,19 +9,21 @@
 
 int main(int argc, char *argv[])
 {
-    std::ifstream input("res/bombom.txt");
-    //  std::ofstream output("res/bombom_compact.txt");
-    std::ifstream decompress("res/bombom_compact.txt");
+    std::ifstream input("res/input.txt");
+    std::ofstream output("res/output.txt");
 
-    std::ofstream outputTree("res/tree_compact.txt");
-    //std::ifstream decompressTree("res/tree_compact.txt");
+    std::ifstream decompress("res/output.txt");
+    std::ofstream unpacked("res/unpacked.txt");
     IOManager io;
 
     io.readFile(input);
-    //    io.encodeTree(output);
-    //    io.compact(input, output);
+    io.compact(input, output);
     input.close();
-    io.decodeTree(decompress);
+    output.close();
+
+    io.decodeTree(decompress, unpacked);
+    decompress.close();
+    unpacked.close();
 
     return 0;
 }
