@@ -17,10 +17,10 @@ int main(int argc, char *argv[])
     IOManager io;
 
     io.readFile(input);
-//    io.compact(input, output);
+    io.compact(input, output);
     input.close();
  //   io.encodeTree(outputTree);
-    io.decodeTree(decompressTree);
+//    io.decodeTree(decompressTree);
 
     return 0;
 }

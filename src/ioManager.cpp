@@ -39,7 +39,7 @@ void IOManager::readFile(std::ifstream &input)
     tree->printTree();
     tree->fillMap();
 
-    delete ascii;
+    delete [] ascii;
 }
 
 std::string IOManager::charBitsToString(unsigned char c) {
@@ -157,13 +157,11 @@ void IOManager::binaryToString(std::ifstream &input)
 
             if( (byte & mask) == 0){
                 byte = byte << 1;
-                byteIndex++;
                 decodingString += '0';
             }
 
             else {
                 byte = byte << 1;
-                byteIndex++;
                 decodingString += '1';
             }
         }
@@ -171,7 +169,7 @@ void IOManager::binaryToString(std::ifstream &input)
 
     std::cout << decodingString << std::endl;
     std::vector<std::string> StringNodes;
-    stringToTree(decodingString.begin(),StringNodes);
+    stringToVec(decodingString.begin(),StringNodes);
     
     for (auto i : StringNodes) {
         std::cout << i << std::endl; 
@@ -225,7 +223,7 @@ void IOManager::stringToVec(std::string::iterator curr_symbol, std::vector<std::
     if(curr_symbol != decodingString.end()){
         if(*curr_symbol == '0'){
             vec.push_back("0");
-            stringToTree(++curr_symbol,vec);
+            stringToVec(++curr_symbol,vec);
         }
 
         else {
@@ -233,7 +231,7 @@ void IOManager::stringToVec(std::string::iterator curr_symbol, std::vector<std::
             int beginIndex = std::distance(decodingString.begin(),curr_symbol);
             std::string letter = decodingString.substr(beginIndex,8);
             vec.push_back(letter);
-            stringToTree(curr_symbol+8,vec);
+            stringToVec(curr_symbol+8,vec);
         }
     }
 }
