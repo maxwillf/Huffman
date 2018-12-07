@@ -31,8 +31,7 @@ void IOManager::readFile(std::ifstream &input)
         if (ascii[i] != 0) {
             char character = i;
             Node *node = new Node(ascii[i], character);
-            insertOrd(orderedNodes, node, pred);
-        }
+            insertOrd(orderedNodes, node, pred); }
     }
 
     insertOrd(orderedNodes, new Node(1, '$'), pred);
@@ -41,7 +40,7 @@ void IOManager::readFile(std::ifstream &input)
     tree->printTree();
     tree->fillMap();
 
-    delete ascii;
+    delete [] ascii;
 }
 
 std::string IOManager::charBitsToString(unsigned char c)
@@ -49,19 +48,18 @@ std::string IOManager::charBitsToString(unsigned char c)
     unsigned char mask = 1;
     std::string bits = "";
 
-    while(bitIndex != 8){
-        if ((c & mask) == mask) {
+    while(byteIndex != 8){
+        if( (c & mask) == mask){
             bits += '1';
         }
         else {
             bits += '0';
         }
-
-        bitIndex++;
+        byteIndex++;
         c = c >> 1;
     }
 
-    bitIndex = 0;
+    byteIndex = 0;
 
     std::reverse(bits.begin(),bits.end());
     return bits;
@@ -110,8 +108,7 @@ void IOManager::encodeTree(std::ofstream &output)
             c = '\0';
         }
     }
-
-    output << '\0';
+    output << (char) 255;
 }
 
 void IOManager::compact(std::ifstream &input, std::ofstream &output)
@@ -149,15 +146,194 @@ void IOManager::compact(std::ifstream &input, std::ofstream &output)
     }
 }
 
-void decodeTree(std::ifstream &input){
+void IOManager::binaryToString(std::ifstream &input)
+{
+    unsigned char mask = 0b10000000;
+    unsigned char delim = (char) 255;
+    while(input.get(byte)){
 
-    char c = '\0';
-    while (input.get(c)){
-/*        if(c == '\0'){
+        if((byte & delim) == delim){
+            std::cout << "broke free" << std::endl;
+            break;
+        }
 
-        }*/
+        for (int i = 0; i < 8; ++i) {
+
+            if( (byte & mask) == 0){
+                byte = byte << 1;
+                decodingString += '0';
+            }
+
+            else {
+                byte = byte << 1;
+                decodingString += '1';
+            }
+        }
     }
+
+    std::cout << decodingString << std::endl;
+    std::vector<std::string> StringNodes;
+    stringToVec(decodingString.begin(),StringNodes);
+
+    for (auto i : StringNodes) {
+        std::cout << i << std::endl;
+    }
+    std::cout << StringNodes.size() << std::endl;
+
+    byteIndex = 0;
+
+    delete tree;
+    this->tree = new HuffmanTree(constructTree(StringNodes));
+
+    std::cout << tree->preOrder() << std::endl;
+}
+
+Node * IOManager::constructTree(std::vector<std::string> & vec)
+{
+    if(byteIndex < vec.size()){
+        if(vec[byteIndex] == "0"){
+            byteIndex++;
+            Node * left = constructTree(vec);
+            byteIndex++;
+            Node * right = constructTree(vec);
+            return new Node(0,left,right);
+        }
+
+        else return new Node(0,stringToChar(vec[byteIndex]));
+    }
+
+    return nullptr;
+}
+
+char IOManager::stringToChar(std::string str)
+{
+    unsigned char byte = 0;
+
+    for (auto i = str.begin(); i < str.end(); ++i) {
+        if(*i == '0'){
+           byte = byte << 1;
+        }
+        else {
+            byte = byte << 1;
+            byte += 1;
+        }
+    }
+
+    //std::cout << byte << std::endl;
+    return byte;
+}
+
+void IOManager::stringToVec(std::string::iterator curr_symbol, std::vector<std::string> & vec)
+{
+    if(curr_symbol != decodingString.end()){
+        if(*curr_symbol == '0'){
+            vec.push_back("0");
+            stringToVec(++curr_symbol,vec);
+        }
+
+        else {
+            curr_symbol++;
+            int beginIndex = std::distance(decodingString.begin(),curr_symbol);
+            std::string letter = decodingString.substr(beginIndex,8);
+            vec.push_back(letter);
+            stringToVec(curr_symbol+8,vec);
+        }
+    }
+}
+
+void IOManager::decodeTree(std::ifstream &input){
+
+    binaryToString(input);
+    readCompressed(input);
+/*    delete tree;
+    tree = new HuffmanTree(decodeTreeR(input));
+    std::cout << tree->preOrder();*/
+}
+
+void IOManager::readCompressed(std::ifstream & input)
+{
+    unsigned char mask = 0x80;
+    std::string file;
+    char temp = '\0';
+
+    while(input.get(byte)){
+       // std::cout << byte << std::endl;
+
+        for (int i = 0; i < 8; ++i) {
+            if( (byte & mask) == mask){
+                //std::cout << "1";
+
+                 temp = tree->searchByBit(mask);
+            }
+
+            else {
+                //std::cout << "0" ;
+                temp = tree->searchByBit(0);
+            }
+
+            if (temp != (char) 255) {
+                file += temp;
+            }
+            byte = byte << 1;
+        }
+    }
+
+    std::cout << file << std::endl;
 
 }
 
+Node* IOManager::decodeTreeR(std::ifstream &input){
 
+    if(byteIndex % 8 == 0){
+        input.get(byte);
+        //std::cout << "urgh" <<  byte << std::endl;
+        if(byte == '\0'){
+            //std::cout << "null " <<  byte << std::endl;
+            return nullptr;
+        }
+
+        byteIndex = 0;
+    }
+
+    unsigned char mask = 0b10000000;
+
+    if( (byte & mask) == 0){
+        byte = byte << 1;
+        byteIndex++;
+//        std::cout << "ue" << std::endl;
+        return new Node(0,decodeTreeR(input),decodeTreeR(input));
+    }
+
+    else {
+        nodeChar = 0;
+
+        while(currentNodeIndex < 8){
+
+            if( (byte & mask) == mask){
+                nodeChar += 1;
+                nodeChar = nodeChar << 1;
+                byte = byte << 1;
+                byteIndex++;
+                currentNodeIndex++;
+            }
+
+            else {
+                nodeChar = nodeChar << 1;
+                byte = byte << 1;
+                byteIndex++;
+                currentNodeIndex++;
+            }
+
+            if(byteIndex % 8 == 0){
+                input.get(byte);
+                if(byte == '\0'){
+                    return nullptr;
+                }
+                byteIndex = 0;
+            }
+        }
+
+        currentNodeIndex = 0;
+        return new Node(0,nodeChar);
+    }
+}

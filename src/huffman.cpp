@@ -16,6 +16,7 @@ HuffmanTree::HuffmanTree(std::vector<Node*> & nodes)
     }
 
     root = nodes.front();
+    searchNode = root;
 }
 
 std::string HuffmanTree::findLetterPath(unsigned char letter)
@@ -80,6 +81,12 @@ void HuffmanTree::printTree()
 
 std::string HuffmanTree::preOrder()
 {
+
+    if(root == nullptr){
+        std::cout << "null root" << std::endl;
+        return "";
+    }
+
     std::string finalString = "";
 
     std::stack<Node *> stack;
@@ -106,4 +113,31 @@ std::string HuffmanTree::preOrder()
     }
 
     return finalString;
+}
+
+char HuffmanTree::searchByBit(unsigned char bit){
+    
+    unsigned char right = 128;
+
+    if(bit == 0){
+        if(searchNode->getLChild() != nullptr){
+            searchNode = searchNode->getLChild();
+        }
+    }
+    else if (bit == right){
+        if(searchNode->getRChild() != nullptr){
+            searchNode = searchNode->getRChild();
+        }
+    }
+
+    if(searchNode->isLeafNode())
+           // searchNode->getLChild() == nullptr and searchNode->getRChild() == nullptr)
+    {
+        char ret = searchNode->getLetter();
+//        std::cout << ret << std::endl;
+        searchNode = root;
+        return ret;
+    }
+
+    else return (char) 255;
 }
