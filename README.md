@@ -23,12 +23,16 @@ the `CC` variable in the makefile to `g++`.
 
 ## Details of implementation
 
+### Node
+
 To implement the huffman algorithm, we had to create a class `Node` for the
 nodes of the trees. Each node stores a frequency of appearance of characters, a
 letter and its left and right child. The `Node` class has, besides the getters
 and setters, an auxiliary function to insert in order, given a vector of any
 type, a new object; this function receives a function that will return a boolean
 indicating if the first argument is the predecessor of the second, as parameter.
+
+### HuffmanTree
 
 As for the digital tree, we created a class called `HuffmanTree`. To actually
 create the tree, we need to first read the file and create a node for each
@@ -62,8 +66,20 @@ appear the most have the smallest path from the root, with the two smallest
 possible paths being 00 and 01. That way we can be as efficient as possible on
 our encoding.
 
+### Compact
+
 After all that is done, we need to compact the file. Since this is an IO action,
-it is done on the `IOManager` class.
+it is done on the `IOManager` class. To compact, we use the `compact()` method,
+in which we pass the input file and the output file as parameters. This method
+calls `encodeTree()`, a method that encodes the tree as the header of the output
+file. After that we encode the message itself using the same method of the
+encoding of the tree. The message and the tree are encoded/compacted using bit
+manipulation; after everything has been converted to its binary format and
+concatenated on a single string, we run through this string, char by char, until
+we have 8 char (or 8 bits), which constitute a byte, which in turn is a char, at
+this point we create a new char using the 8 bits already read from the string,
+and output this new char, no matter if its an ASCII char or not, to the output
+file.
 
 ## Authorship
 
